@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #---------------------------------------------------------------------------------------------
+
 #First File
 
 class admixPlotter():
@@ -10,54 +11,34 @@ class admixPlotter():
         self.myFile2 = None
         self.x = []
         self.y = []
-        self.list = None
-        self.nextList = None
+        list = None
         self.kValue = None
-        self.newList = []
-        # self.string1 = []
-        # self.string2 = []
-        # self.string3 = []
-        # self.string4 = []
-        self.col1 =[]
-        self.col2 = []
-        self.empty = []
-        self.empty1 = []
+        self.N = None  # number of lines in the admixture files which shud be the same
+        self.FamList = []
+        self.CoordinateList = []
+        self.PheList = []
+        self.catagory = []
+        self.xAxisPos = []
 
     def readFile1(self, fileName1):
         with open (fileName1) as myFile1:
             lines = myFile1.read().splitlines()
 
-        xPos = []
+        s = lines[0]
+        t = s.split()
+        k = len(t)
+        emptyList = []
+        for l in range(k):
+            self.FamList.append(emptyList)  #creates a list of empty lists first so that append doesnt have to be used later
 
-        for j in range (len(lines)):
-            n = lines[j]
-            m = n.split()
-            xPos.append(m[3])
-            self.col1.append(m[0])
-            self.col2.append(m[1])
+        for m in range(k):
+            vals =[]
+            for i in range(len(lines)):
+                s = lines[i]
+                t = s.split()
+                vals.append(t[m])
+            self.FamList[m] = vals
 
-
-
-        color = []
-
-        for position,string in enumerate(xPos):
-            if string=='west-africa':
-                color.append('#ff0000')
-
-            if string == 'europe':
-                color.append('#00ff00')
-
-            if string == 'east-africa':
-                color.append('#0000ff')
-
-            if string == 'east-asia':
-                color.append('#ffff00')
-
-            if string == 'south-asia':
-                color.append('#000000')
-
-            if string == 'north-america':
-                color.append('#EE82EE')
 
 #-------------------------------------------------------------------------------------------------
 #Second File
@@ -65,76 +46,122 @@ class admixPlotter():
     def readFile2(self, fileName2):
 
         with open(fileName2) as myFile2:
-            self.list = myFile2.read().splitlines()
+            list = myFile2.read().splitlines()
 
-        for i in range(len(self.list)):
-            s = self.list[i]
-            t = s.split()
-            self.kValue = len(t)
-            listVals = []
+        self.N= len(list)  #gets lenght of self.list
+
+        lines = []
+        sum = []
+        for i in range(self.N):
+            s = list[i]
+            t = s.split()        #splits the line with different co-ordinate values
+            lines.append(t)
             sumVals = 0
             for index in range(len(t)):
-                listVals.append(float(t[index]))
                 sumVals = sumVals+ float(t[index])
+            sum.append(sumVals)
+
+        self.kValue = len(lines[0])      #gets k value
+        emptyList = []
+        for l in range(self.kValue):
+            self.CoordinateList.append(emptyList)  #creates a list of empty lists first so that append doesnt have to be used later
+
+        for m in range(self.kValue):
+            vals =[]
+            for i in range(self.N):
+                # s = self.list[i]
+                # t = s.split()
+                vals.append((float(lines[i][m])/sum[i]) *100)
+
+            self.CoordinateList[m] = vals
+
+        for m in range(self.kValue):
+            self.CoordinateList[m] = np.array(self.CoordinateList[m])
+
+        np.column_stack(self.CoordinateList)
+        # print(self.CoordinateList)
+
+
 
             #for index in range(len(t)):
                 #listVals[index] = (listVals[index]/sumVals) *100
-
-            self.newList.append(listVals)
-            #a = float(t[0])*100
-            #b = float(t[1])*100
-
-            #print(listVals)
-
-            self.x.append(listVals[0]/sumVals)    #to get 100%
-            self.y.append(listVals[1]/sumVals)
 
 #----------------------------------------------------------------------------------------------------------------------
 
 #Third File
 
-    def readFile3 (self, fileName3):
+    def readFile3 (self, fileName3,pheCol):
 
         with open(fileName3) as myFile3:
-            nextList = myFile3.read().splitlines()
+            lines = myFile3.read().splitlines()
+
+        s = lines[0]
+        t = s.split()
+        k = len(t)
+        emptyList = []
+        for l in range(k):
+            self.PheList.append(emptyList)  #creates a list of empty lists first so that append doesnt have to be used later
+
+        for m in range(k):
+            vals =[]
+            for i in range(len(lines)):
+                s = lines[i]
+                t = s.split()
+                vals.append(t[m])
+            self.PheList[m] = vals
+
+#create the x labels properly
+        catagoryCol = self.PheList[pheCol]
+        counter = 0
+        self.catagory.append('--------------')
+        self.catagory.append(catagoryCol[0])
+        self.xAxisPos.append(counter)
+        for position,string in enumerate(catagoryCol):
+            check= False
+            max = 0
+            counter = counter +1
+            for i in range(0,len(self.catagory)):
+                if string==self.catagory[i]:
+                    #self.color.append(colorHex[i])
+                    check = True
+                    max = i
+            if check==False:
+                self.catagory.append('--------------')
+                self.catagory.append(string)
+                self.xAxisPos.append((self.xAxisPos[len(self.xAxisPos)-1] + counter) / 2)
+                self.xAxisPos.append(counter)
+                #self.color.append(colorHex[max+1])
+        self.xAxisPos.append((self.xAxisPos[len(self.xAxisPos)-1] + counter) / 2)
+        self.xAxisPos.append(counter)
+        self.catagory.append('--------------')
 
 
 
-        for v in range(len(nextList)):
-            a = nextList[v]
-            b = a.split()
-            self.empty.append(b[0])
-            self.empty1.append(b[1])
 
 #----------------------------------------------------------------------------------------------------------------------
     #Check if file3 = file1
 
     def checkIfFilesEqual (self):
 
-
-
-        if self.col1 == self.empty:
-
-            print ("Right files")
-
-
+        if ((self.PheList[0] == self.FamList[0]) or (self.PheList[1] == self.FamList[1])):
+            print ("Family and Individual Identifiers match")
         else:
-            print ("Wrong Fam/Phe File")
-
-        if self.col2 == self.empty1:
-            print ("Right Files")
-
-        else:
-            print("Wrong Fam/Phe File")
+            print("Fam and Phe files identifiers do not match")
 
 #----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+#----------------------------------------------------------------------------------------------------------------------
+
 #Plot Graphs
 
-    def plotGraph(self):
+    def plotGraph(self,colorHex):
 
-        N= len(self.list)  #gets lenght of self.list
 
-        ind = np.arange(N)  #places it into numbers i.e. [1,2,3,4...N]
+
+        ind = np.arange(self.N)  #places it into numbers i.e. [1,2,3,4...N]
 
         #print(self.x)
         #print(self.y)
@@ -144,15 +171,17 @@ class admixPlotter():
         p2 = plt.bar(ind,y, width,bottom=y)
         
         '''
-        plt.stackplot(ind, self.x, self.y, colors =['r','c'])
+        arr = [0,200,400,600,1200]
+        plt.xticks(self.xAxisPos,self.catagory, rotation=90)
+        plt.stackplot(ind, self.CoordinateList, colors =colorHex)
         plt.ylabel('k = ' + str(self.kValue))
         plt.show()
-        #print(self.newList)
 
 
-# plotter = admixPlotter()
-# plotter.readFile1('small.phe')
-# plotter.readFile2('small.Q.2')
-# plotter.readFile3('small.fam')
-# plotter.checkIfFilesEqual()
-# plotter.plotGraph()
+colors = ['#0000FF','#FF0000','#008000','#00FF00','#FFFF00','#00FFFF','#008080','#C0C0C0','#FF00FF','#800080','#008000','#000000']
+plotter = admixPlotter()
+plotter.readFile1('small.fam')
+plotter.readFile2('small.Q.2')
+plotter.readFile3('small.phe',4)
+plotter.checkIfFilesEqual()
+plotter.plotGraph(colors)
