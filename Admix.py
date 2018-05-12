@@ -90,7 +90,7 @@ class admixPlotter():
 
 #Third File
 
-    def readFile3 (self, fileName3,pheCol):
+    def readFile3 (self, fileName3):
 
         with open(fileName3) as myFile3:
             lines = myFile3.read().splitlines()
@@ -111,6 +111,29 @@ class admixPlotter():
             self.PheList[m] = vals
 
 #create the x labels properly
+
+
+
+#----------------------------------------------------------------------------------------------------------------------
+    #Check if file3 = file1
+
+    def checkIfFilesEqual (self):
+
+        if ((self.PheList[0] == self.FamList[0]) or (self.PheList[1] == self.FamList[1])):
+            print ("Family and Individual Identifiers match")
+        else:
+            print("Fam and Phe files identifiers do not match")
+
+#----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+#----------------------------------------------------------------------------------------------------------------------
+
+#Plot Graphs
+
+    def plotGraph(self,colorHex,pheCol):
         catagoryCol = self.PheList[pheCol]
         counter = 0
         self.catagory.append('--------------')
@@ -136,31 +159,6 @@ class admixPlotter():
         self.catagory.append('--------------')
 
 
-
-
-#----------------------------------------------------------------------------------------------------------------------
-    #Check if file3 = file1
-
-    def checkIfFilesEqual (self):
-
-        if ((self.PheList[0] == self.FamList[0]) or (self.PheList[1] == self.FamList[1])):
-            print ("Family and Individual Identifiers match")
-        else:
-            print("Fam and Phe files identifiers do not match")
-
-#----------------------------------------------------------------------------------------------------------------------
-
-
-
-
-#----------------------------------------------------------------------------------------------------------------------
-
-#Plot Graphs
-
-    def plotGraph(self,colorHex):
-
-
-
         ind = np.arange(self.N)  #places it into numbers i.e. [1,2,3,4...N]
 
         #print(self.x)
@@ -182,6 +180,6 @@ colors = ['#0000FF','#FF0000','#008000','#00FF00','#FFFF00','#00FFFF','#008080',
 plotter = admixPlotter()
 plotter.readFile1('small.fam')
 plotter.readFile2('small.Q.2')
-plotter.readFile3('small.phe',4)
+plotter.readFile3('small.phe')
 plotter.checkIfFilesEqual()
-plotter.plotGraph(colors)
+plotter.plotGraph(colors,4)
