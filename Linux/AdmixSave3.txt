@@ -1,0 +1,4 @@
+C:/Users/Keanu/Downloads/GenesisScripts/small.Q.2
+C:/Users/Keanu/Downloads/GenesisScripts/small.fam
+C:/Users/Keanu/Downloads/GenesisScripts/small.phe
+3
