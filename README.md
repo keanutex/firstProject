@@ -1,7 +1,7 @@
 # Reimplementation of Genesis
 
 Contents of directory:
-1. Genesis folder - download this to be able to run Genesis on your Linux system.
+1. Genesis folder - Containts the program scripts and an examples folder with input files.
 2. Minutes file - File to describe minutes of each group member
 3. Group document - A technical manual and a user manual of the re-implemented Genesis.
 
@@ -19,7 +19,6 @@ To install matplotlib:
 
 To install tkinter:
   $ sudo apt-get install python-tk
-
 
 How to run Genesis:
 
